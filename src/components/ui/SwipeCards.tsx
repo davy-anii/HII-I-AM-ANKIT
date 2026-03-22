@@ -96,54 +96,38 @@ export default function Stack({
       setStack(processCards(cards));
     } else {
       setStack(processCards([
-        {
-          id: 1,
-          content: (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src="https://i.postimg.cc/HWSK9MRk/Whats-App-Image-2026-03-10-at-21-04-33-(1).jpg"
-              alt="card-1"
-              className="w-full h-full object-cover pointer-events-none"
-              draggable={false}
-            />
-          )
-        },
-        {
-          id: 2,
-          content: (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src="https://i.postimg.cc/0QvQnF6z/image.png"
-              alt="card-2"
-              className="w-full h-full object-cover pointer-events-none"
-              draggable={false}
-            />
-          )
-        },
-        {
-          id: 3,
-          content: (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src="https://i.postimg.cc/kGBdvvyv/image.png"
-              alt="card-3"
-              className="w-full h-full object-cover pointer-events-none"
-              draggable={false}
-            />
-          )
-        },
-        {
-          id: 4,
-          content: (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src="https://i.postimg.cc/tTg09Nw5/image.png"
-              alt="card-4"
-              className="w-full h-full object-cover pointer-events-none"
-              draggable={false}
-            />
-          )
-        }
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          key="card-1"
+          src="https://i.postimg.cc/HWSK9MRk/Whats-App-Image-2026-03-10-at-21-04-33-(1).jpg"
+          alt="card-1"
+          className="w-full h-full object-cover pointer-events-none"
+          draggable={false}
+        />,
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          key="card-2"
+          src="https://i.postimg.cc/0QvQnF6z/image.png"
+          alt="card-2"
+          className="w-full h-full object-cover pointer-events-none"
+          draggable={false}
+        />,
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          key="card-3"
+          src="https://i.postimg.cc/kGBdvvyv/image.png"
+          alt="card-3"
+          className="w-full h-full object-cover pointer-events-none"
+          draggable={false}
+        />,
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          key="card-4"
+          src="https://i.postimg.cc/tTg09Nw5/image.png"
+          alt="card-4"
+          className="w-full h-full object-cover pointer-events-none"
+          draggable={false}
+        />
       ]));
     }
   }, [cards, randomRotation]);
