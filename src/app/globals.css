@@ -1,35 +1,60 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #050510;
-  --color-foreground: #ededed;
-  --color-neon-blue: #00f0ff;
-  --color-neon-purple: #8a2be2;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Neobrutalist Palette */
+  --color-background: #FFFDF5;
+  --color-foreground: #000000;
+  --color-neo-yellow: #FBFF48;
+  --color-neo-pink: #FF70A6;
+  --color-neo-green: #33FF57;
+  --color-neo-purple: #A855F7;
+  --color-neo-blue: #3B82F6;
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-mono), monospace;
   overflow-x: hidden;
 }
 
-/* Glassmorphism utility */
-@utility glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+/* Neobrutalist Hard Shadow */
+@utility hard-shadow {
+  box-shadow: 4px 4px 0px 0px #000000;
 }
 
-@utility glass-hover {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+@utility hard-shadow-sm {
+  box-shadow: 2px 2px 0px 0px #000000;
+}
+
+@utility hard-shadow-lg {
+  box-shadow: 6px 6px 0px 0px #000000;
+}
+
+/* Neobrutalist Border */
+@utility neo-border {
+  border: 2px solid #000000;
+}
+
+/* Keep glass as a fallback (unused in redesign but won't break imports) */
+@utility glass {
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid #000000;
 }
 
 /* Smooth Scroll */
 html {
   scroll-behavior: smooth;
+}
+
+/* Section dividers */
+.neo-section {
+  border-top: 2px solid #000;
+}
+
+/* Dotted background pattern for hero */
+.dot-bg {
+  background-image: radial-gradient(#00000022 1px, transparent 1px);
+  background-size: 20px 20px;
 }

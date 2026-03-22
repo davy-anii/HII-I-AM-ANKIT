@@ -1,89 +1,115 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, ExternalLink, Folder } from "lucide-react";
+import { Github, ExternalLink } from "lucide-react";
 
 const projects = [
   {
-    title: "Smart IoT Automation System",
-    description: "Built a comprehensive system to automate real-world devices, providing seamless control and monitoring capabilities.",
-    tech: ["IoT", "Firebase", "React Native", "Node.js"],
-    github: "#",
-    live: "#"
+    title: "FOODYcare",
+    description: "A food delivery application integrated with NGOs to help distribute surplus food and reduce waste.",
+    tech: ["React Native", "Node.js", "Express", "MongoDB"],
+    github: "https://github.com/davy-anii/FOODYcare",
+    accent: "#FBFF48",
   },
   {
-    title: "AI Powered Assistant App",
-    description: "Built under 24–36 hours during a hackathon. Features robust AI integration for smart recommendations and real-time functionality.",
-    tech: ["Next.js", "OpenAI API", "Tailwind CSS"],
-    github: "#",
-    live: "#"
+    title: "HACKLINTAKE",
+    description: "A scalable mobile app for hackathons. Features role-based access, comprehensive team management, and secure authentication.",
+    tech: ["React Native", "Expo", "Firebase", "Zustand"],
+    github: "https://github.com/davy-anii/HACKLINTAKE",
+    live: "#",
+    accent: "#FF70A6",
   },
   {
-    title: "E-Commerce Mobile App",
-    description: "A full-scale e-commerce application with real-time inventory management, payment gateway integration, and sleek UI.",
-    tech: ["Android (Kotlin)", "Firebase", "Stripe API"],
-    github: "#",
-    live: "#"
-  }
+    title: "SHAKTI",
+    description: "A comprehensive women's safety website providing instant alerts, location tracking, and emergency resources.",
+    tech: ["Next.js", "Node.js", "Tailwind CSS", "MongoDB"],
+    github: "https://github.com/davy-anii/SHAKTI",
+    live: "#",
+    accent: "#33FF57",
+  },
 ];
 
 export default function ProjectsSection() {
   return (
-    <section id="projects" className="py-24 px-6 relative bg-black/20">
+    <section id="projects" className="py-16 sm:py-24 px-4 sm:px-6 relative neo-section bg-[#FFFDF5]">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5 }}
         >
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <h2 className="text-3xl md:text-5xl font-bold flex items-center gap-4">
-              <span className="text-[var(--color-neon-purple)]">04.</span> Featured Projects
+          <p className="text-xs sm:text-sm font-black uppercase tracking-widest mb-2 opacity-50">
+            /PROJECTS
+          </p>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3 sm:gap-4">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase leading-tight">
+              Featured Projects
             </h2>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-[var(--color-neon-blue)] hover:underline flex items-center gap-2">
-              View full archive <ExternalLink size={16} />
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noreferrer"
+              data-cursor-color="#FBFF48"
+              className="cursor-target inline-flex items-center gap-2 border-2 border-black px-4 py-2 font-bold text-xs sm:text-sm uppercase hard-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all bg-white self-start sm:self-auto shrink-0"
+            >
+              Full Archive <ExternalLink size={13} />
             </a>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {projects.map((project, i) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass p-8 rounded-2xl flex flex-col h-full group hover:-translate-y-2 hover:border-[var(--color-neon-blue)]/50 transition-all duration-300 relative overflow-hidden"
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="flex flex-col border-4 border-black hard-shadow hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all bg-white"
               >
-                {/* Glow effect on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-neon-blue)]/0 to-[var(--color-neon-purple)]/0 group-hover:from-[var(--color-neon-blue)]/5 group-hover:to-[var(--color-neon-purple)]/5 transition-colors duration-500" />
-                
-                <div className="flex justify-between items-center mb-8 relative z-10">
-                  <Folder className="text-[var(--color-neon-blue)]" size={40} />
-                  <div className="flex gap-4">
-                    <a href={project.github} className="text-gray-400 hover:text-[var(--color-neon-purple)] transition-colors" target="_blank" rel="noreferrer">
-                      <Github size={22} />
-                    </a>
-                    <a href={project.live} className="text-gray-400 hover:text-[var(--color-neon-blue)] transition-colors" target="_blank" rel="noreferrer">
-                      <ExternalLink size={22} />
+                {/* Colored Header Bar */}
+                <div
+                  className="border-b-4 border-black px-4 sm:px-5 py-2.5 sm:py-3 font-black text-xs sm:text-sm uppercase"
+                  style={{ backgroundColor: project.accent }}
+                >
+                  Project {String(i + 1).padStart(2, "0")}
+                </div>
+
+                <div className="p-4 sm:p-5 flex flex-col flex-grow">
+                  <h3 className="text-base sm:text-lg font-black uppercase mb-2 sm:mb-3 leading-tight">
+                    {project.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm leading-relaxed mb-4 sm:mb-5 flex-grow opacity-70">
+                    {project.description}
+                  </p>
+
+                  {/* Tech Pills */}
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
+                    {project.tech.map((t) => (
+                      <span
+                        key={t}
+                        className="px-2 py-0.5 border-2 border-black text-xs font-bold"
+                        style={{ backgroundColor: project.accent }}
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Links */}
+                  {/* Links */}
+                  <div className="flex gap-2 sm:gap-3 mt-auto">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-cursor-color={project.accent}
+                      className="cursor-target flex items-center gap-1.5 border-2 border-black px-3 py-2 text-xs font-black uppercase hard-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all bg-black text-white"
+                    >
+                      <Github size={12} /> Code
                     </a>
                   </div>
                 </div>
-                
-                <h3 className="text-2xl font-bold text-white mb-4 relative z-10 group-hover:text-[var(--color-neon-blue)] transition-colors">
-                  {project.title}
-                </h3>
-                
-                <p className="text-gray-400 mb-8 flex-grow relative z-10">
-                  {project.description}
-                </p>
-                
-                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-[var(--color-neon-purple)] font-mono relative z-10">
-                  {project.tech.map((tech, i) => (
-                    <li key={i}>{tech}</li>
-                  ))}
-                </ul>
               </motion.div>
             ))}
           </div>

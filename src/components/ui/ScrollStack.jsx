@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 
 export const ScrollStackItem = ({ children, itemClassName = '' }) => (
   <div
-    className={`scroll-stack-card relative max-w-[340px] mx-auto h-[260px] my-6 p-6 rounded-[3rem] shadow-[0_0_30px_rgba(0,0,0,0.1)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
+    className={`scroll-stack-card relative max-w-[340px] mx-auto h-[260px] my-6 p-6 rounded-[3rem] shadow-[0_0_30px_rgba(22,66,91,0.1)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
     style={{
       backfaceVisibility: 'hidden',
       transformStyle: 'preserve-3d'

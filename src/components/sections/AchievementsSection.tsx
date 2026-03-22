@@ -2,48 +2,65 @@
 
 import { motion } from "framer-motion";
 import { Award, Trophy, Star } from "lucide-react";
+import SwipeCards from "@/components/ui/SwipeCards";
+
+const achievements = [
+  { title: "Winner – DoubleSlash 4.0", org: "IEEE Jadavpur University", icon: <Trophy size={18} />, bg: "#FBFF48" },
+  { title: "Winner – NextGen Hacks", org: "Calcutta University", icon: <Trophy size={18} />, bg: "#FBFF48" },
+  { title: "4× Hackathon Winner", org: "Multiple Events", icon: <Award size={18} />, bg: "#FF70A6" },
+  { title: "Best App Track", org: "ShowcaseX", icon: <Star size={18} />, bg: "#33FF57" },
+  { title: "GitLinked Certification", org: "RCCTechz", icon: <Award size={18} />, bg: "#33FF57" },
+];
 
 export default function AchievementsSection() {
-  const achievements = [
-    { title: "Winner – DoubleSlash 4.0", org: "IEEE Jadavpur University", icon: <Trophy className="text-yellow-400" /> },
-    { title: "Winner – NextGen Hacks", org: "Calcutta University", icon: <Trophy className="text-yellow-400" /> },
-    { title: "4× Hackathon Winner", org: "Multiple Events", icon: <Award className="text-[var(--color-neon-blue)]" /> },
-    { title: "Best App Track", org: "ShowcaseX", icon: <Star className="text-[var(--color-neon-purple)]" /> },
-    { title: "GitLinked Certification", org: "RCCTechz", icon: <Award className="text-green-400" /> },
-  ];
-
   return (
-    <section id="achievements" className="py-24 px-6 relative">
-      <div className="max-w-4xl mx-auto">
+    <section id="achievements" className="py-16 sm:py-24 px-4 sm:px-6 relative neo-section bg-[#FBFF48]">
+      <div className="max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-12 flex items-center gap-4">
-            <span className="text-[var(--color-neon-blue)]">05.</span> Achievements
+          <p className="text-xs sm:text-sm font-black uppercase tracking-widest mb-2 opacity-50">
+            /ACHIEVEMENTS
+          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase mb-8 sm:mb-12 leading-tight">
+            Achievements
           </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {achievements.map((item, index) => (
+
+          {/* Achievement List */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-10 sm:mb-16">
+            {achievements.map((item, i) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="glass p-6 rounded-xl flex items-center gap-4 hover:border-[var(--color-neon-blue)]/30 transition-colors cursor-default"
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                data-cursor-color={item.bg}
+                className="cursor-target flex items-center gap-3 sm:gap-4 border-4 border-black px-3 sm:px-5 py-3 sm:py-4 bg-white hard-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
               >
-                <div className="p-3 bg-white/5 rounded-full border border-white/10 shrink-0">
+                <div
+                  className="shrink-0 border-2 border-black p-1.5 sm:p-2"
+                  style={{ backgroundColor: item.bg }}
+                >
                   {item.icon}
                 </div>
-                <div>
-                  <h3 className="font-bold text-lg text-white">{item.title}</h3>
-                  <p className="text-sm text-gray-400">{item.org}</p>
+                <div className="min-w-0">
+                  <h3 className="font-black text-sm sm:text-base uppercase leading-tight truncate">{item.title}</h3>
+                  <p className="text-xs mt-0.5 opacity-60 font-semibold">{item.org}</p>
                 </div>
               </motion.div>
             ))}
+          </div>
+
+          {/* Swipe Cards */}
+          <div className="border-4 border-black hard-shadow-lg bg-white p-3 sm:p-4 overflow-hidden">
+            <p className="text-xs font-black uppercase tracking-widest mb-3 sm:mb-4 text-center opacity-50">
+              Swipe to explore moments →
+            </p>
+            <SwipeCards />
           </div>
         </motion.div>
       </div>

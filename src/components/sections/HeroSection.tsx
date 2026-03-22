@@ -1,140 +1,191 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Terminal, Trophy, MapPin } from "lucide-react";
-import ProfileCard from "@/components/ui/ProfileCard";
+import { ArrowRight, MapPin, Trophy } from "lucide-react";
+import SplitText from "@/components/ui/SplitText";
+import Shuffle from "@/components/ui/Shuffle";
 
 export default function HeroSection() {
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center pt-24 pb-12 relative px-6 overflow-hidden">
-      <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        
-        {/* Left Content */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left z-10">
-          
-          {/* Open to Work Badge */}
+    <section
+      id="hero"
+      className="min-h-screen flex items-center justify-center pt-16 relative dot-bg"
+    >
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-12 flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+        {/* Avatar — mobile top, hidden on lg (shown right side) */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-center items-center lg:hidden w-full"
+        >
+          <div className="relative">
+            <div className="absolute -bottom-2 -right-2 w-full h-full bg-black z-0" />
+            <div className="relative z-10 border-4 border-black overflow-hidden w-48 h-52 sm:w-60 sm:h-68">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://i.postimg.cc/y8J30VFX/Whats-App-Image-2026-03-19-at-21-21-50.jpg"
+                alt="Ankit Karmakar"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div className="relative z-10 border-2 border-t-0 border-black bg-black text-[#FBFF48] font-black py-2 px-3 text-center text-xs uppercase tracking-wider">
+              App &amp; IoT Developer @ RCCTechz
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Left Text Content */}
+        <div className="flex flex-col items-start z-10 w-full">
+
+          {/* Status Badge */}
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--color-neon-blue)]/50 bg-[var(--color-neon-blue)]/10 text-[var(--color-neon-blue)] text-sm font-medium mb-8"
+            transition={{ duration: 0.4 }}
+            data-cursor-color="#33FF57"
+            className="cursor-target inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 mb-6 sm:mb-8 border-2 border-black bg-[#33FF57] font-black text-xs sm:text-sm uppercase hard-shadow"
           >
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-neon-blue)] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--color-neon-blue)]"></span>
-            </span>
+            <span className="w-2 h-2 rounded-full bg-black animate-pulse inline-block" />
             Open to Work
           </motion.div>
 
-          {/* Title */}
-          <motion.h1
+          {/* Name */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-3 sm:mb-4 uppercase">
+            <SplitText
+              text="HI, I'M"
+              delay={50}
+              duration={0.8}
+              tag="span"
+            />
+            <br />
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 15 }}
+              className="bg-[#FBFF48] border-2 border-black hard-shadow px-2 sm:px-4 py-1 inline-block mt-2 text-center"
+            >
+              <span className="block leading-[1.1]">
+                <SplitText text="ANKIT" delay={12} duration={0.8} tag="span" />
+              </span>
+              <span className="block leading-[1.1]">
+                <SplitText
+                  text="KARMAKAR"
+                  delay={40}
+                  duration={0.70}
+                  tag="span"
+                />
+              </span>
+            </motion.span>
+          </h1>
+
+          {/* Brutalist Role Display */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative flex flex-col items-start mt-8 mb-6 sm:mb-10 w-full"
           >
-            Hi, I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-neon-blue)] to-[var(--color-neon-purple)]">Ankit Karmakar</span>
-          </motion.h1>
+            {/* Tilted System Status Badge */}
+            <div className="absolute -top-5 left-10 sm:left-16 rotate-[-4deg] z-10 w-max">
+              <div className="bg-white border-2 border-black hard-shadow-sm px-2 py-1 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#33FF57] border border-black animate-pulse" />
+                <span className="text-[10px] sm:text-xs font-black tracking-widest uppercase">System Status: Online</span>
+              </div>
+            </div>
 
-          {/* Role */}
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-2xl md:text-3xl text-gray-300 font-medium mb-6 flex items-center justify-center lg:justify-start gap-3 flex-wrap"
-          >
-            <Terminal className="text-[var(--color-neon-purple)]" />
-            App &amp; IoT Developer
-          </motion.h2>
-
-          {/* Tagline */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-400 max-w-2xl mb-8"
-          >
-            &quot;Building scalable apps &amp; intelligent IoT solutions with real-world impact.&quot;
-          </motion.p>
+            {/* FRONTEND */}
+            <Shuffle
+              text="FRONTEND"
+              tag="div"
+              className="text-[13vw] sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85] text-black w-full"
+            />
+            
+            {/* DEVELOPER */}
+            <Shuffle
+              text="DEVELOPER"
+              tag="div"
+              className="text-[11.5vw] sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85] text-transparent w-full mt-1"
+              style={{ WebkitTextStroke: '2px black' }}
+            />
+          </motion.div>
 
           {/* Location */}
           <motion.div
-             initial={{ opacity: 0 }}
-             animate={{ opacity: 1 }}
-             transition={{ duration: 0.5, delay: 0.5 }}
-             className="flex items-center gap-2 text-gray-400 mb-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="flex items-center gap-2 text-sm font-semibold mb-6 sm:mb-8"
           >
-            <MapPin size={18} className="text-[var(--color-neon-blue)]" />
+            <MapPin size={15} />
             Kolkata, India
           </motion.div>
 
-          {/* Achievements Grid */}
+          {/* Achievement Badges */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-10 w-full"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-wrap gap-2 sm:gap-3 mb-8 sm:mb-10"
           >
-            {[
-              "4× Hackathon Winner",
-              "DoubleSlash 4.0",
-              "NextGen Hacks"
-            ].map((achievement, i) => (
-              <div key={i} className="glass rounded-xl p-3 flex items-center justify-center lg:justify-start gap-2 hover:border-[var(--color-neon-purple)]/50 transition-colors">
-                <Trophy className="text-[var(--color-neon-purple)] shrink-0" size={16} />
-                <span className="font-semibold text-gray-200 text-sm whitespace-nowrap">{achievement}</span>
-              </div>
+            {["4× Hackathon Winner", "DoubleSlash 4.0", "NextGen Hacks"].map((label) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 border-2 border-black bg-[#FF70A6] font-bold text-xs sm:text-sm hard-shadow-sm"
+              >
+                <Trophy size={12} />
+                {label}
+              </span>
             ))}
           </motion.div>
 
-          {/* CTA Buttons */}
+          {/* CTA */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-            className="flex flex-col sm:flex-row gap-4 w-full justify-center lg:justify-start"
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
           >
             <a
               href="#projects"
-              className="cursor-target flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[var(--color-neon-purple)] text-white font-bold text-base hover:scale-105 transition-transform shadow-[0_0_20px_rgba(138,43,226,0.4)]"
+              data-cursor-color="#FBFF48"
+              className="cursor-target flex items-center justify-center gap-2 px-6 sm:px-8 py-4 bg-black text-[#FBFF48] font-black text-sm sm:text-base uppercase border-2 border-black hard-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all w-full sm:w-auto"
             >
-              View My Work <ArrowRight size={18} />
+              View My Work <ArrowRight size={16} />
             </a>
             <a
               href="#contact"
-              className="cursor-target flex items-center justify-center px-8 py-4 rounded-full border border-gray-600 text-gray-300 font-bold text-base hover:bg-gray-800 hover:text-white transition-colors"
+              data-cursor-color="#FF70A6"
+              className="cursor-target flex items-center justify-center px-6 sm:px-8 py-4 bg-[#FBFF48] text-black font-black text-sm sm:text-base uppercase border-2 border-black hard-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all w-full sm:w-auto"
             >
-              Contact Me
+              Hire Me
             </a>
           </motion.div>
         </div>
 
-        {/* Right Content - 3D Tilt Profile Card */}
+        {/* Right Avatar — desktop only */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, x: 20 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="flex justify-center items-center mt-12 lg:mt-0 z-10 w-full"
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="hidden lg:flex justify-center items-center"
         >
-          <ProfileCard
-            name="Ankit Karmakar"
-            title="App &amp; IoT Developer"
-            handle="ankitcodes"
-            status="Online"
-            contactText="Hire Me"
-            avatarUrl="https://i.postimg.cc/y8J30VFX/Whats-App-Image-2026-03-19-at-21-21-50.jpg"
-            showUserInfo={true}
-            enableTilt={true}
-            enableMobileTilt={false}
-            behindGlowEnabled={true}
-            behindGlowColor="rgba(0, 240, 255, 0.5)"
-            innerGradient="linear-gradient(145deg, rgba(16,16,26,0.9) 0%, rgba(30,30,50,0.6) 100%)"
-            onContactClick={() => {
-              window.location.href = "#contact";
-            }}
-          />
+          <div className="relative">
+            <div className="absolute -bottom-3 -right-3 w-full h-full bg-black z-0" />
+            <div className="relative z-10 border-4 border-black overflow-hidden w-72 h-80 md:w-80 md:h-96">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://i.postimg.cc/y8J30VFX/Whats-App-Image-2026-03-19-at-21-21-50.jpg"
+                alt="Ankit Karmakar"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div className="relative z-10 border-2 border-t-0 border-black bg-black text-[#FBFF48] font-black py-3 px-4 text-center text-sm uppercase tracking-widest">
+              App &amp; IoT Developer @ RCCTechz
+            </div>
+          </div>
         </motion.div>
-
       </div>
     </section>
   );

@@ -287,7 +287,7 @@ class App {
     {
       items,
       bend,
-      textColor = '#ffffff',
+      textColor = '#d9dcd6',
       borderRadius = 0,
       font = 'bold 30px Figtree',
       scrollSpeed = 2,
@@ -315,7 +315,7 @@ class App {
       dpr: Math.min(window.devicePixelRatio || 1, 2)
     });
     this.gl = this.renderer.gl;
-    this.gl.clearColor(0, 0, 0, 0);
+    this.gl.clearColor(22, 66, 91, 0);
     this.container.appendChild(this.gl.canvas);
   }
   createCamera() {
@@ -447,7 +447,7 @@ class App {
 export default function CircularGallery({
   items,
   bend = 3,
-  textColor = '#ffffff',
+  textColor = '#d9dcd6',
   borderRadius = 0.05,
   font = 'bold 30px Inter',
   scrollSpeed = 2,

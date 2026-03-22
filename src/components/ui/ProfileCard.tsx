@@ -124,7 +124,7 @@ export default function ProfileCard({
         {/* Text/Info Layer */}
         <div className="text-center z-10 w-full" style={{ transform: "translateZ(30px)" }}>
           <h3 className="text-2xl font-bold tracking-tight text-white mb-1">{name}</h3>
-          <p className="text-[var(--color-neon-blue)] font-medium text-sm mb-4">{title}</p>
+          <p className="text-[var(--color-accent)] font-medium text-sm mb-4">{title}</p>
           
           {showUserInfo && (
             <div className="w-full px-4 py-3 bg-black/40 rounded-xl border border-white/5 mb-6 text-sm text-gray-300">

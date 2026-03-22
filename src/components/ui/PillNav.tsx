@@ -33,7 +33,7 @@ export default function PillNav({
   className = "",
   ease = "easeOut", // mapped to standard tween
   baseColor = "rgba(0,0,0,0.5)",
-  pillColor = "var(--color-neon-blue)",
+  pillColor = "var(--color-accent)",
   hoveredPillTextColor = "#000000",
   pillTextColor = "#ffffff",
   theme = "dark",
@@ -53,7 +53,7 @@ export default function PillNav({
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, [activeHref]);
 
-  const transition = { type: "tween" as const, ease: "easeOut", duration: 0.3 };
+  const transition = { type: "tween" as const, ease: "easeOut" as const, duration: 0.3 };
   
   return (
     <nav className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all max-w-fit ${className}`}>
@@ -144,7 +144,7 @@ export default function PillNav({
                   key={index}
                   href={item.href}
                   className={`px-6 py-4 rounded-xl transition-colors font-bold text-lg mb-2 ${
-                    isActive ? "bg-[var(--color-neon-blue)]/20 text-[var(--color-neon-blue)]" : "text-white hover:bg-white/5"
+                    isActive ? "bg-[var(--color-accent)]/20 text-[var(--color-accent)]" : "text-white hover:bg-white/5"
                   }`}
                   onClick={() => {
                     setCurrentActive(item.href);
