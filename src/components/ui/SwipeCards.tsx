@@ -2,11 +2,11 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-function CardRotate({ children, onSendToBack, sensitivity, disableDrag = false }: any) {
+function CardRotate({ children, onSendToBack, sensitivity, disableDrag = false, isMobile = false }: any) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   
-  // Use transforms ONLY if drag is enabled to save on calculations
+  // Disable 3D transforms on mobile for maximum smoothness
   const rotateX = useTransform(y, [-100, 100], [15, -15]);
   const rotateY = useTransform(x, [-100, 100], [-15, 15]);
 
@@ -25,14 +25,16 @@ function CardRotate({ children, onSendToBack, sensitivity, disableDrag = false }
       style={{ 
         x, 
         y, 
-        rotateX: disableDrag ? 0 : rotateX, 
-        rotateY: disableDrag ? 0 : rotateY, 
-        touchAction: "none" 
+        rotateX: (disableDrag || isMobile) ? 0 : rotateX, 
+        rotateY: (disableDrag || isMobile) ? 0 : rotateY, 
+        touchAction: disableDrag ? "auto" : "none",
+        willChange: "transform"
       }}
       drag={!disableDrag}
       dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
       dragElastic={0.6}
-      whileTap={!disableDrag ? { cursor: 'grabbing' } : undefined}
+      dragMomentum={false}
+      whileTap={!disableDrag ? { cursor: 'grabbing', scale: 0.98 } : undefined}
       onDragEnd={handleDragEnd}
     >
       {children}
@@ -48,9 +50,9 @@ interface StackItem {
 
 export default function Stack({
   randomRotation = false,
-  sensitivity = 60, // Lower sensitivity makes it easier on mobile
+  sensitivity = 50, // Even more sensitive for easier swipes
   cards = [],
-  animationConfig = { stiffness: 300, damping: 25 },
+  animationConfig = { stiffness: 250, damping: 30 }, // Slightly softer for better perf
   sendToBackOnClick = false,
   autoplay = false,
   autoplayDelay = 3000,
@@ -72,22 +74,22 @@ export default function Stack({
   const [isMobile, setIsMobile] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  const processCards = (rawCards: any[]) => {
-    return rawCards.map((content: any, index: number) => ({ 
-      id: index + 1, 
-      content, 
-      randomRotation: randomRotation ? Math.random() * 10 - 5 : 0 
-    }));
-  };
-
-  const [stack, setStack] = useState<StackItem[]>([]);
-
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < mobileBreakpoint);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, [mobileBreakpoint]);
+
+  const processCards = (rawCards: any[]) => {
+    return rawCards.map((content: any, index: number) => ({ 
+      id: index + 1, 
+      content, 
+      randomRotation: randomRotation ? Math.random() * 8 - 4 : 0 
+    }));
+  };
+
+  const [stack, setStack] = useState<StackItem[]>([]);
 
   useEffect(() => {
     if (cards.length) {
@@ -172,20 +174,20 @@ export default function Stack({
 
   return (
     <div
-      className="relative w-full h-[400px] flex items-center justify-center rounded-lg overflow-hidden py-8"
+      className="relative w-full h-[380px] sm:h-[400px] flex items-center justify-center rounded-lg overflow-hidden py-4 sm:py-8"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke-width='2' stroke='%23cccccc'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
         backgroundColor: "#f5f5f5",
-        touchAction: "none"
+        touchAction: "pan-y" // Allow vertical scrolling on the container
       }}
-      onMouseEnter={() => pauseOnHover && setIsPaused(true)}
-      onMouseLeave={() => pauseOnHover && setIsPaused(false)}
+      onMouseEnter={() => !isMobile && pauseOnHover && setIsPaused(true)}
+      onMouseLeave={() => !isMobile && pauseOnHover && setIsPaused(false)}
     >
-      <div className="relative w-56 h-72 sm:w-64 sm:h-80" style={{ perspective: 1000 }}>
+      <div className="relative w-52 h-64 sm:w-64 sm:h-80" style={{ perspective: 1000 }}>
         {stack.map((card, index) => {
-          // Only show top 4 cards for performance
+          // Render ONLY 3 cards on mobile, 4 on desktop
           const depth = stack.length - 1 - index;
-          if (depth > 3) return null;
+          if (isMobile ? depth > 2 : depth > 3) return null;
 
           return (
             <CardRotate
@@ -193,6 +195,7 @@ export default function Stack({
               onSendToBack={() => sendToBack(card.id)}
               sensitivity={sensitivity}
               disableDrag={shouldDisableDrag || depth !== 0}
+              isMobile={isMobile}
             >
               <motion.div
                 layout
@@ -200,10 +203,10 @@ export default function Stack({
                 onClick={() => shouldEnableClick && sendToBack(card.id)}
                 animate={{
                   rotateZ: depth * 4 + card.randomRotation,
-                  scale: 1 - depth * 0.05,
-                  y: depth * 8,
+                  scale: 1 - depth * 0.06,
+                  y: depth * 9,
                   zIndex: index,
-                  opacity: 1 - depth * 0.15
+                  opacity: 1 - depth * 0.2
                 }}
                 initial={false}
                 transition={{
@@ -212,7 +215,8 @@ export default function Stack({
                   damping: animationConfig.damping
                 }}
                 style={{
-                  transformOrigin: '50% 100%'
+                  transformOrigin: '50% 100%',
+                  willChange: "transform, opacity"
                 }}
               >
                 {card.content}
