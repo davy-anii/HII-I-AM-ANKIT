@@ -5,35 +5,34 @@ import { useState, useEffect } from 'react';
 function CardRotate({ children, onSendToBack, sensitivity, disableDrag = false }: any) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  // Reduced rotation mapping so it doesn't skew heavily when dragging
-  const rotateX = useTransform(y, [-100, 100], [20, -20]);
-  const rotateY = useTransform(x, [-100, 100], [-20, 20]);
+  
+  // Use transforms ONLY if drag is enabled to save on calculations
+  const rotateX = useTransform(y, [-100, 100], [15, -15]);
+  const rotateY = useTransform(x, [-100, 100], [-15, 15]);
 
   function handleDragEnd(_: any, info: any) {
-    if (Math.abs(info.offset.x) > sensitivity || Math.abs(info.offset.y) > sensitivity) {
+    const isPastThreshold = Math.abs(info.offset.x) > sensitivity || Math.abs(info.offset.y) > sensitivity;
+    if (isPastThreshold) {
       onSendToBack();
     }
-    // Snap back instantly
     x.set(0);
     y.set(0);
   }
 
-  if (disableDrag) {
-    return (
-      <motion.div className="absolute inset-0 cursor-default" style={{ x: 0, y: 0 }}>
-        {children}
-      </motion.div>
-    );
-  }
-
   return (
     <motion.div
-      className="absolute inset-0 cursor-grab"
-      style={{ x, y, rotateX, rotateY, touchAction: "none" }}
-      drag
+      className={`absolute inset-0 ${disableDrag ? 'cursor-default' : 'cursor-grab'}`}
+      style={{ 
+        x, 
+        y, 
+        rotateX: disableDrag ? 0 : rotateX, 
+        rotateY: disableDrag ? 0 : rotateY, 
+        touchAction: "none" 
+      }}
+      drag={!disableDrag}
       dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
       dragElastic={0.6}
-      whileTap={{ cursor: 'grabbing' }}
+      whileTap={!disableDrag ? { cursor: 'grabbing' } : undefined}
       onDragEnd={handleDragEnd}
     >
       {children}
@@ -44,13 +43,14 @@ function CardRotate({ children, onSendToBack, sensitivity, disableDrag = false }
 interface StackItem {
   id: number;
   content: any;
+  randomRotation: number;
 }
 
 export default function Stack({
   randomRotation = false,
-  sensitivity = 80, // Lower sensitivity makes it easier to swipe on mobile
+  sensitivity = 60, // Lower sensitivity makes it easier on mobile
   cards = [],
-  animationConfig = { stiffness: 260, damping: 20 },
+  animationConfig = { stiffness: 300, damping: 25 },
   sendToBackOnClick = false,
   autoplay = false,
   autoplayDelay = 3000,
@@ -72,6 +72,16 @@ export default function Stack({
   const [isMobile, setIsMobile] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
+  const processCards = (rawCards: any[]) => {
+    return rawCards.map((content: any, index: number) => ({ 
+      id: index + 1, 
+      content, 
+      randomRotation: randomRotation ? Math.random() * 10 - 5 : 0 
+    }));
+  };
+
+  const [stack, setStack] = useState<StackItem[]>([]);
+
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < mobileBreakpoint);
     checkMobile();
@@ -79,14 +89,11 @@ export default function Stack({
     return () => window.removeEventListener('resize', checkMobile);
   }, [mobileBreakpoint]);
 
-  const shouldDisableDrag = mobileClickOnly && isMobile;
-  const shouldEnableClick = sendToBackOnClick || shouldDisableDrag;
-
-  const [stack, setStack] = useState<StackItem[]>(() => {
+  useEffect(() => {
     if (cards.length) {
-      return cards.map((content: any, index: number) => ({ id: index + 1, content }));
+      setStack(processCards(cards));
     } else {
-      return [
+      setStack(processCards([
         {
           id: 1,
           content: (
@@ -135,15 +142,9 @@ export default function Stack({
             />
           )
         }
-      ];
+      ]));
     }
-  });
-
-  useEffect(() => {
-    if (cards.length) {
-      setStack(cards.map((content: any, index: number) => ({ id: index + 1, content })));
-    }
-  }, [cards]);
+  }, [cards, randomRotation]);
 
   const sendToBack = (id: number) => {
     setStack((prev: StackItem[]) => {
@@ -166,6 +167,9 @@ export default function Stack({
     }
   }, [autoplay, autoplayDelay, stack, isPaused]);
 
+  const shouldDisableDrag = mobileClickOnly && isMobile;
+  const shouldEnableClick = sendToBackOnClick || shouldDisableDrag;
+
   return (
     <div
       className="relative w-full h-[400px] flex items-center justify-center rounded-lg overflow-hidden py-8"
@@ -177,32 +181,38 @@ export default function Stack({
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
-      <div className="relative w-56 h-72 sm:w-64 sm:h-80" style={{ perspective: 600 }}>
+      <div className="relative w-56 h-72 sm:w-64 sm:h-80" style={{ perspective: 1000 }}>
         {stack.map((card, index) => {
-          const randomRotate = randomRotation ? Math.random() * 10 - 5 : 0;
+          // Only show top 4 cards for performance
+          const depth = stack.length - 1 - index;
+          if (depth > 3) return null;
+
           return (
             <CardRotate
               key={card.id}
               onSendToBack={() => sendToBack(card.id)}
               sensitivity={sensitivity}
-              // Only top card is draggable
-              disableDrag={shouldDisableDrag || index !== stack.length - 1}
+              disableDrag={shouldDisableDrag || depth !== 0}
             >
               <motion.div
+                layout
                 className="rounded-2xl overflow-hidden w-full h-full border-4 border-black bg-white select-none shadow-xl"
                 onClick={() => shouldEnableClick && sendToBack(card.id)}
                 animate={{
-                  rotateZ: (stack.length - index - 1) * 4 + randomRotate,
-                  // Tweak scale math so top card is natural scale
-                  scale: 1 - (stack.length - 1 - index) * 0.05,
-                  y: (stack.length - 1 - index) * 10,
-                  transformOrigin: '50% 100%'
+                  rotateZ: depth * 4 + card.randomRotation,
+                  scale: 1 - depth * 0.05,
+                  y: depth * 8,
+                  zIndex: index,
+                  opacity: 1 - depth * 0.15
                 }}
                 initial={false}
                 transition={{
                   type: 'spring',
                   stiffness: animationConfig.stiffness,
                   damping: animationConfig.damping
+                }}
+                style={{
+                  transformOrigin: '50% 100%'
                 }}
               >
                 {card.content}
