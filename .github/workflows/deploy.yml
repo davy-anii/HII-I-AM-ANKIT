@@ -1,0 +1,79 @@
+name: Deploy to Vercel & Create GitHub Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write   # needed to create GitHub Releases
+
+jobs:
+  deploy:
+    name: Build, Deploy & Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so we can tag releases
+
+      # ── 2. Setup Node ─────────────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 3. Install dependencies ───────────────────────────────────────────────
+      - name: Install dependencies
+        run: npm ci
+
+      # ── 4. Deploy to Vercel ──────────────────────────────────────────────────
+      - name: Deploy to Vercel (Production)
+        id: vercel_deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npm install -g vercel@latest
+          # Deploy and capture the URL
+          DEPLOY_URL=$(vercel --token "$VERCEL_TOKEN" --prod --yes 2>&1 | grep -E "^https://" | tail -1)
+          echo "DEPLOY_URL=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
+          echo "✅ Deployed to: $DEPLOY_URL"
+
+      # ── 5. Generate version tag ───────────────────────────────────────────────
+      - name: Generate release tag
+        id: tag
+        run: |
+          # Use date-based version: v2026.03.24-1234 (date + short SHA)
+          TAG="v$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)"
+          echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Generated tag: $TAG"
+
+      # ── 6. Create GitHub Release with deploy URL ──────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.TAG }}
+          name: "🚀 Deploy — ${{ steps.tag.outputs.TAG }}"
+          body: |
+            ## 🌐 Live Deployment
+
+            [${{ steps.vercel_deploy.outputs.DEPLOY_URL }}](${{ steps.vercel_deploy.outputs.DEPLOY_URL }})
+
+            ---
+
+            ### 📦 Changes in this release
+            ${{ github.event.head_commit.message }}
+
+            **Commit:** [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            **Branch:** `${{ github.ref_name }}`
+            **Deployed at:** ${{ github.event.head_commit.timestamp }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

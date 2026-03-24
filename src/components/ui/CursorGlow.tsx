@@ -6,14 +6,30 @@ import { motion } from "framer-motion";
 export default function CursorGlow() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
     };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     
-    window.addEventListener("mousemove", updateMousePosition);
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
+    if (!isMobile) {
+      const updateMousePosition = (e: MouseEvent) => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      };
+      window.addEventListener("mousemove", updateMousePosition);
+      return () => {
+        window.removeEventListener("mousemove", updateMousePosition);
+        window.removeEventListener('resize', checkMobile);
+      };
+    }
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [isMobile]);
+
+  if (isMobile) return null;
 
   return (
     <motion.div

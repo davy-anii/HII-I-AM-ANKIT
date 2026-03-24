@@ -37,6 +37,11 @@ const Shuffle = ({
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [ready, setReady] = useState(false);
 
+  // On mobile, skip the heavy GSAP SplitText animation entirely
+  const isMobile =
+    typeof window !== 'undefined' &&
+    (('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 768);
+
   const splitRef = useRef<any>(null);
   const wrappersRef = useRef<any>([]);
   const tlRef = useRef<any>(null);
@@ -380,12 +385,16 @@ const Shuffle = ({
   );
 
   const baseTw = 'inline-block whitespace-normal break-words will-change-transform uppercase leading-none';
-  const classes = useMemo(
-    () => `${baseTw} ${ready ? 'visible' : 'invisible'} ${className}`.trim(),
-    [baseTw, ready, className]
-  );
   const Tag = tag || 'p';
   const commonStyle = useMemo(() => ({ textAlign, ...style }), [textAlign, style]);
+
+  // Mobile: render text directly, no animation
+  if (isMobile) {
+    const mobileClasses = `${baseTw} visible ${className}`.trim();
+    return React.createElement(Tag as any, { className: mobileClasses, style: commonStyle }, text);
+  }
+
+  const classes = `${baseTw} ${ready ? 'visible' : 'invisible'} ${className}`.trim();
 
   return React.createElement(Tag as any, { ref: ref, className: classes, style: commonStyle }, text);
 };

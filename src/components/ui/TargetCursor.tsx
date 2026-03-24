@@ -46,14 +46,20 @@ const TargetCursor = ({
     []
   );
 
-  const moveCursor = useCallback((x: number, y: number) => {
+  const xSet = useRef<any>(null);
+  const ySet = useRef<any>(null);
+
+  useEffect(() => {
     if (!cursorRef.current) return;
-    gsap.to(cursorRef.current, {
-      x,
-      y,
-      duration: 0.1,
-      ease: 'power3.out'
-    });
+    xSet.current = gsap.quickSetter(cursorRef.current, 'x', 'px');
+    ySet.current = gsap.quickSetter(cursorRef.current, 'y', 'px');
+  }, []);
+
+  const moveCursor = useCallback((x: number, y: number) => {
+    if (xSet.current && ySet.current) {
+      xSet.current(x);
+      ySet.current(y);
+    }
   }, []);
 
   useEffect(() => {
@@ -102,24 +108,25 @@ const TargetCursor = ({
       }
       const strength = activeStrengthRef.current.current;
       if (strength === 0) return;
+      
       const cursorX = gsap.getProperty(cursorRef.current, 'x') as number;
       const cursorY = gsap.getProperty(cursorRef.current, 'y') as number;
       const corners = Array.from(cornersRef.current);
+      
       corners.forEach((corner, i) => {
-        const currentX = gsap.getProperty(corner, 'x') as number;
-        const currentY = gsap.getProperty(corner, 'y') as number;
         const targetX = targetCornerPositionsRef.current![i].x - cursorX;
         const targetY = targetCornerPositionsRef.current![i].y - cursorY;
-        const finalX = currentX + (targetX - currentX) * strength;
-        const finalY = currentY + (targetY - currentY) * strength;
-        const duration = strength >= 0.99 ? (parallaxOn ? 0.2 : 0) : 0.05;
-        gsap.to(corner, {
-          x: finalX,
-          y: finalY,
-          duration: duration,
-          ease: duration === 0 ? 'none' : 'power1.out',
-          overwrite: 'auto'
-        });
+        
+        // Use gsap.set for instant updates when strength is high to avoid tween overhead
+        if (strength >= 0.99) {
+          gsap.set(corner, { x: targetX, y: targetY });
+        } else {
+          const currentX = gsap.getProperty(corner, 'x') as number;
+          const currentY = gsap.getProperty(corner, 'y') as number;
+          const finalX = currentX + (targetX - currentX) * strength;
+          const finalY = currentY + (targetY - currentY) * strength;
+          gsap.set(corner, { x: finalX, y: finalY });
+        }
       });
     };
 
@@ -129,18 +136,9 @@ const TargetCursor = ({
     window.addEventListener('mousemove', moveHandler);
 
     const scrollHandler = () => {
-      if (!activeTarget || !cursorRef.current) return;
-      const mouseX = gsap.getProperty(cursorRef.current, 'x') as number;
-      const mouseY = gsap.getProperty(cursorRef.current, 'y') as number;
-      const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
-      const isStillOverTarget =
-        elementUnderMouse &&
-        (elementUnderMouse === activeTarget || elementUnderMouse.closest(targetSelector) === activeTarget);
-      if (!isStillOverTarget) {
-        if (currentLeaveHandler) {
-          currentLeaveHandler();
-        }
-      }
+      // Optimized scroll handler - removed document.elementFromPoint
+      // which was causing layout thrashing. Hover state is now 
+      // primarily handled by mouseleave on the target itself.
     };
     window.addEventListener('scroll', scrollHandler, { passive: true });
 

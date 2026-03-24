@@ -327,9 +327,11 @@ class App {
     this.scene = new Transform();
   }
   createGeometry() {
+    const isMobile = window.innerWidth <= 768;
     this.planeGeometry = new Plane(this.gl, {
-      heightSegments: 50,
-      widthSegments: 100
+      // Fewer segments on mobile = massively less GPU vertex work
+      heightSegments: isMobile ? 10 : 50,
+      widthSegments: isMobile ? 20 : 100,
     });
   }
   createMedias(items, bend = 1, textColor, borderRadius, font) {
@@ -402,6 +404,7 @@ class App {
     }
   }
   update() {
+    if (this.isPaused) return;
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
     if (this.medias) {
@@ -410,6 +413,14 @@ class App {
     this.renderer.render({ scene: this.scene, camera: this.camera });
     this.scroll.last = this.scroll.current;
     this.raf = window.requestAnimationFrame(this.update.bind(this));
+  }
+  togglePlay(play) {
+    this.isPaused = !play;
+    if (play) {
+      this.raf = window.requestAnimationFrame(this.update.bind(this));
+    } else {
+      window.cancelAnimationFrame(this.raf);
+    }
   }
   addEventListeners() {
     this.boundOnResize = this.onResize.bind(this);
@@ -470,7 +481,15 @@ export default function CircularGallery({
     }
     
     const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase });
+    
+    const observer = new IntersectionObserver(([entry]) => {
+      app.togglePlay(entry.isIntersecting);
+    }, { threshold: 0.4 });
+    
+    observer.observe(containerRef.current);
+
     return () => {
+      observer.disconnect();
       app.destroy();
     };
   }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);

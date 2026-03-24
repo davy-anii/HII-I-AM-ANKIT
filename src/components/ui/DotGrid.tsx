@@ -14,6 +14,16 @@ interface DotGridProps {
   returnDuration?: number;
 }
 
+// Returns null on mobile/touch devices: the physics canvas loop is too
+// CPU-intensive for touch screens and causes noticeable page jank.
+function useIsMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    ('ontouchstart' in window || navigator.maxTouchPoints > 0) &&
+    window.innerWidth <= 768
+  );
+}
+
 export default function DotGrid({
   dotSize = 5,
   gap = 15,
@@ -25,10 +35,15 @@ export default function DotGrid({
   resistance = 750,
   returnDuration = 1.5,
 }: DotGridProps) {
+  // Skip on mobile — canvas physics loop causes severe jank on touch devices
+  const isMobile = useIsMobileDevice();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (isMobile) return; // extra guard in case SSR mismatch
     const canvas = canvasRef.current;
+
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -181,7 +196,10 @@ export default function DotGrid({
       window.removeEventListener("click", onClick);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [dotSize, gap, baseColor, activeColor, proximity, shockRadius, shockStrength, resistance]);
+  }, [isMobile, dotSize, gap, baseColor, activeColor, proximity, shockRadius, shockStrength, resistance]);
+
+  // Don't render anything on mobile
+  if (isMobile) return null;
 
   return (
     <canvas
@@ -190,3 +208,4 @@ export default function DotGrid({
     />
   );
 }
+
