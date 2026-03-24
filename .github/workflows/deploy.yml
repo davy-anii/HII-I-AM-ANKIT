@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # full history so we can tag releases
+          fetch-depth: 0
 
       # ── 2. Setup Node ─────────────────────────────────────────────────────────
       - name: Setup Node.js
@@ -31,30 +31,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # ── 4. Deploy to Vercel ──────────────────────────────────────────────────
-      - name: Deploy to Vercel (Production)
-        id: vercel_deploy
+      # ── 4. Deploy to Vercel (Production) ─────────────────────────────────────
+      - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           npm install -g vercel@latest
-          # Deploy and capture the URL
-          DEPLOY_URL=$(vercel --token "$VERCEL_TOKEN" --prod --yes 2>&1 | grep -E "^https://" | tail -1)
-          echo "DEPLOY_URL=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
-          echo "✅ Deployed to: $DEPLOY_URL"
+          vercel --token "$VERCEL_TOKEN" --prod --yes
+          echo "✅ Deployed to https://ankitkarmakar.vercel.app"
 
       # ── 5. Generate version tag ───────────────────────────────────────────────
       - name: Generate release tag
         id: tag
         run: |
-          # Use date-based version: v2026.03.24-1234 (date + short SHA)
           TAG="v$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)"
           echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
-          echo "Generated tag: $TAG"
 
-      # ── 6. Create GitHub Release with deploy URL ──────────────────────────────
+      # ── 6. Create GitHub Release ──────────────────────────────────────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -63,7 +58,7 @@ jobs:
           body: |
             ## 🌐 Live Deployment
 
-            [${{ steps.vercel_deploy.outputs.DEPLOY_URL }}](${{ steps.vercel_deploy.outputs.DEPLOY_URL }})
+            **[https://ankitkarmakar.vercel.app](https://ankitkarmakar.vercel.app)**
 
             ---
 
