@@ -20,9 +20,8 @@ export default function HeroSection() {
           transition={{ duration: 0.5 }}
           className="flex justify-center items-center lg:hidden w-full"
         >
-          <div className="relative w-48 sm:w-60">
-            <div className="absolute -bottom-2 -right-2 w-48 h-52 sm:w-60 sm:h-[272px] bg-black z-0" />
-            <div className="relative z-10 border-4 border-black overflow-hidden w-48 h-52 sm:w-60 sm:h-68">
+          <div className="w-48 sm:w-60" style={{ boxShadow: '8px 8px 0 0 #000' }}>
+            <div className="border-4 border-black overflow-hidden w-48 h-52 sm:w-60 sm:h-68">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://i.postimg.cc/y8J30VFX/Whats-App-Image-2026-03-19-at-21-21-50.jpg"
@@ -30,7 +29,7 @@ export default function HeroSection() {
                 className="w-full h-full object-cover object-top"
               />
             </div>
-            <div className="relative z-10 border-2 border-t-0 border-black bg-black text-[#FBFF48] font-black py-2 px-3 text-center text-xs uppercase tracking-wider">
+            <div className="border-2 border-t-0 border-black bg-black text-[#FBFF48] font-black py-2 px-3 text-center text-xs uppercase tracking-wider">
               App &amp; IoT Developer @ RCCTechz
             </div>
           </div>
