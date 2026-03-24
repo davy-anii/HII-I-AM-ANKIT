@@ -20,7 +20,7 @@ export default function HeroSection() {
           transition={{ duration: 0.5 }}
           className="flex justify-center items-center lg:hidden w-full"
         >
-          <div className="relative">
+          <div className="relative w-fit">
             <div className="absolute -bottom-2 -right-2 w-full h-full bg-black z-0" />
             <div className="relative z-10 border-4 border-black overflow-hidden w-48 h-52 sm:w-60 sm:h-68">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -171,7 +171,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="hidden lg:flex justify-center items-center"
         >
-          <div className="relative">
+          <div className="relative w-fit">
             <div className="absolute -bottom-3 -right-3 w-full h-full bg-black z-0" />
             <div className="relative z-10 border-4 border-black overflow-hidden w-72 h-80 md:w-80 md:h-96">
               {/* eslint-disable-next-line @next/next/no-img-element */}
