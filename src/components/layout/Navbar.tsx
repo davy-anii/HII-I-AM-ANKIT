@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 const navItems = [
   { label: "Home", href: "#hero" },
@@ -63,9 +64,10 @@ function MobileMenu() {
     <div className="md:hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="cursor-target border-2 border-black px-3 py-2 font-black text-xs uppercase hard-shadow hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all bg-white"
+        className="cursor-target border-2 border-black p-2 font-black hard-shadow hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all bg-white"
+        title="Menu"
       >
-        {open ? "CLOSE" : "MENU"}
+        {open ? <X size={20} /> : <Menu size={20} />}
       </button>
 
       {open && (

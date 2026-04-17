@@ -40,9 +40,9 @@ export default function CVSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor-color="#FF70A6"
-                className="cursor-target inline-flex items-center justify-center gap-2 px-10 py-5 bg-white text-black font-black text-xl uppercase border-4 border-black shadow-hard hover:bg-neo-pink hover:text-black hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all w-full sm:w-auto"
+                className="cursor-target group inline-flex items-center justify-center gap-2 px-10 py-5 bg-black text-white font-black text-xl uppercase border-4 border-black hard-shadow hover:bg-[#FF70A6] hover:text-black hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all w-full sm:w-auto"
               >
-                <Eye size={24} strokeWidth={3} /> VIEW CV
+                <Eye size={24} strokeWidth={3} className="text-[#33FF57] group-hover:text-black transition-colors" /> VIEW CV
               </a>
             </div>
           </motion.div>

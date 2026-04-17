@@ -17,17 +17,20 @@ export default function AchievementsSection() {
     <section id="achievements" className="py-16 sm:py-24 px-4 sm:px-6 relative neo-section bg-[#FBFF48]">
       <div className="max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
+           initial={{ opacity: 0, y: 30 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true, margin: "-50px" }}
+           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <p className="text-xs sm:text-sm font-black uppercase tracking-widest mb-2 opacity-50">
             /ACHIEVEMENTS
           </p>
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase mb-8 sm:mb-12 leading-tight">
-            Achievements
-          </h2>
+          <div className="mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase leading-tight">
+              Achievements
+            </h2>
+            <span className="block text-sm font-bold opacity-60 mt-1 uppercase">Milestones and competitive wins.</span>
+          </div>
 
           {/* Achievement List */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-10 sm:mb-16">

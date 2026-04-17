@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Smartphone, Cpu, Sparkles } from "lucide-react";
+import { Smartphone, Cpu, Sparkles, MapPin, GraduationCap, Briefcase, Trophy } from "lucide-react";
 
 const cards = [
   {
@@ -29,45 +29,48 @@ export default function AboutSection() {
     <section id="about" className="py-16 sm:py-24 px-4 sm:px-6 relative neo-section bg-[#FFFDF5]">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
+           initial={{ opacity: 0, y: 30 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true, margin: "-50px" }}
+           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <p className="text-xs sm:text-sm font-black uppercase tracking-widest mb-2 opacity-50">
             /ABOUT
           </p>
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase mb-8 sm:mb-12 leading-tight">
-            About Me
-          </h2>
+          <div className="mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase leading-tight">
+              Thinking in Systems.
+            </h2>
+            <span className="block text-sm font-bold opacity-60 mt-1 uppercase">A systems thinker and full-stack app developer.</span>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-start">
             {/* Bio */}
             <div className="space-y-4 sm:space-y-5 text-sm sm:text-base leading-relaxed">
               <p>
-                <strong>App &amp; IoT Developer</strong> with experience building scalable applications and smart systems. Currently an App &amp; IoT Associate at <strong>RCCTechz</strong>.
+                I&apos;m <strong>Ankit Karmakar</strong>. A systems thinker, hackathon veteran, and full-stack app developer.
               </p>
               <p>
-                Skilled in Android, Firebase, and modern JavaScript frameworks, with multiple hackathon wins.
+                From designing robust backends in Node to architecting high-performance cross-platform applications, I focus on building resilient, scalable systems from the ground up prioritizing real-world execution.
               </p>
-              <p>
-                Passionate about leveraging AI to build smarter, real-world solutions.
+              <p className="italic font-bold">
+                &quot;Passionate about leveraging AI and IoT to build intelligent, connected solutions.&quot;
               </p>
 
               {/* Quick Facts */}
               <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2 sm:pt-4">
                 {[
-                  ["📍", "Kolkata, India"],
-                  ["🎓", "BCA Student,RCCIIT"],
-                  ["💼", "RCCTechz"],
-                  ["🏆", "4× Hackathon Winner"],
-                ].map(([emoji, text]) => (
+                  { icon: <MapPin size={16} />, text: "Kolkata, India" },
+                  { icon: <GraduationCap size={16} />, text: "BCA Student,RCCIIT" },
+                  { icon: <Briefcase size={16} />, text: "RCCTechz" },
+                  { icon: <Trophy size={16} />, text: "4× Hackathon Winner" },
+                ].map((item) => (
                   <div
-                    key={text}
+                    key={item.text}
                     className="flex items-center gap-2 border-2 border-black px-2 sm:px-3 py-2 bg-white hard-shadow-sm font-semibold text-xs sm:text-sm"
                   >
-                    <span>{emoji}</span>
-                    <span className="truncate">{text}</span>
+                    <span className="flex items-center justify-center shrink-0">{item.icon}</span>
+                    <span className="truncate">{item.text}</span>
                   </div>
                 ))}
               </div>

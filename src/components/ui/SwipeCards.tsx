@@ -55,10 +55,10 @@ function CardRotate({ children, onSendToBack, sensitivity, isMobile = false }: a
 // Defined OUTSIDE the component so the reference never changes and
 // never triggers an unwanted useEffect re-run.
 const DEFAULT_CARD_URLS = [
-  'https://i.postimg.cc/HWSK9MRk/Whats-App-Image-2026-03-10-at-21-04-33-(1).jpg',
-  'https://i.postimg.cc/0QvQnF6z/image.png',
-  'https://i.postimg.cc/kGBdvvyv/image.png',
   'https://i.postimg.cc/tTg09Nw5/image.png',
+  'https://i.postimg.cc/0QvQnF6z/image.png',
+  'https://i.postimg.cc/q7t5fJzT/Whats-App-Image-2026-04-17-at-21-52-18.jpg',
+  'https://i.postimg.cc/HWSK9MRk/Whats-App-Image-2026-03-10-at-21-04-33-(1).jpg',
 ];
 
 interface StackItem {
