@@ -13,25 +13,26 @@ import TargetCursor from "@/components/ui/TargetCursor";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import LenisProvider from "@/components/ui/LenisProvider";
 import ChatbotWindow from "@/components/ui/ChatbotWindow";
+import AiChatSection from "@/components/sections/AiChatSection";
 
 export default function Home() {
   return (
     <LenisProvider>
       <main className="flex flex-col w-full relative z-10">
-      <LoadingScreen />
-      <TargetCursor />
-      <ChatbotWindow />
-      <Navbar />
-      <HeroSection />
-      <ProjectsSection />
-      <GithubStatsSection />
-      <TechStackSection />
-      <AboutSection />
-      <ExperienceSection />
-      <AchievementsSection />
-      <CVSection />
-      <ContactSection />
-      <Footer />
+        <LoadingScreen />
+        <TargetCursor />
+        <ChatbotWindow />
+        <Navbar />
+        <HeroSection />
+        <ProjectsSection />
+        <GithubStatsSection />
+        <TechStackSection />
+        <AboutSection />
+        <ExperienceSection />
+        <AchievementsSection />
+        <CVSection />
+        <ContactSection />
+        <Footer />
       </main>
     </LenisProvider>
   );
