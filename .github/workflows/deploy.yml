@@ -1,4 +1,4 @@
-name: Deploy to Vercel & Create GitHub Release
+ name: Deploy to Vercel & Create GitHub Release
 
 on:
   push:
