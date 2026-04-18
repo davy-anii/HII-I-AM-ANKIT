@@ -14,7 +14,7 @@ interface ChatMessage {
 type Intent = 'greeting' | 'thanks' | 'goodbye' | 'query';
 
 const INTENT_RESPONSES: Record<Exclude<Intent, 'query'>, string> = {
-  greeting: "Hey! I'm Cairo 👋 How can I help you today?",
+  greeting: "Hey! I'm Kairo 👋 How can I help you today?",
   thanks: "You're welcome! Let me know if you need anything else 😊",
   goodbye: 'Goodbye! Have a great day 🚀',
 };
