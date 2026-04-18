@@ -8,6 +8,7 @@ import ProjectsSection from "@/components/sections/ProjectsSection";
 import AchievementsSection from "@/components/sections/AchievementsSection";
 import ContactSection from "@/components/sections/ContactSection";
 import GithubStatsSection from "@/components/sections/GithubStatsSection";
+import SeoSection from "@/components/sections/SeoSection";
 import Footer from "@/components/layout/Footer";
 import TargetCursor from "@/components/ui/TargetCursor";
 import LoadingScreen from "@/components/ui/LoadingScreen";
@@ -27,6 +28,7 @@ export default function Home() {
         <ProjectsSection />
         <GithubStatsSection />
         <TechStackSection />
+        <SeoSection />
         <AboutSection />
         <ExperienceSection />
         <AchievementsSection />

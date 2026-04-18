@@ -10,6 +10,68 @@ interface Message {
   content: string;
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(null), ms);
+    promise
+      .then((value) => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch(() => {
+        clearTimeout(timer);
+        resolve(null);
+      });
+  });
+}
+
+async function submitChatLead(email: string, message: string) {
+  let web3formsSent = false;
+  let firebaseSaved = false;
+
+  const web3Task = withTimeout(
+    (async () => {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
+          name: "Chatbot User",
+          email,
+          message,
+        })
+      });
+
+      const result = await response.json().catch(() => ({}));
+      return Boolean(response.ok && result?.success);
+    })(),
+    7000
+  );
+
+  const firebaseTask = withTimeout(
+    (async () => {
+      const { addDoc, collection, serverTimestamp } = await import("firebase/firestore");
+      const { db } = await import("@/lib/firebase");
+
+      await addDoc(collection(db, "contacts"), {
+        name: "Chatbot User",
+        email,
+        message,
+        timestamp: serverTimestamp(),
+      });
+
+      return true;
+    })(),
+    7000
+  );
+
+  const [web3Result, firebaseResult] = await Promise.all([web3Task, firebaseTask]);
+  web3formsSent = Boolean(web3Result);
+  firebaseSaved = Boolean(firebaseResult);
+
+  return { web3formsSent, firebaseSaved };
+}
+
 export default function ChatbotWindow() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -56,7 +118,7 @@ export default function ChatbotWindow() {
 
       const data = await response.json();
 
-      let aiText = data.reply || data.error || "Communication failure.";
+      let aiText = String(data.reply || data.error || "Communication failure.").trim();
 
       // Intercept LLM Email Commands directly on the client to bypass IP blocks
       const emailMatch = aiText.match(/\[SEND_EMAIL:\s*([^|]+)\|\s*([^\]]+)\]/i);
@@ -67,29 +129,17 @@ export default function ChatbotWindow() {
         // Strip from the UI
         aiText = aiText.replace(/\[SEND_EMAIL:.*?\]/i, "").trim();
 
-        // 1. Dispatch Web3Forms from the allowed localhost/browser IP
-        fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({
-            access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
-            name: "Chatbot Bot",
-            email: extractedEmail,
-            message: extractedMessage,
-          })
-        }).catch(console.error);
+        const { web3formsSent, firebaseSaved } = await submitChatLead(extractedEmail, extractedMessage);
 
-        // 2. Synchronize to the existing Firebase contacts node
-        import("firebase/firestore").then(({ addDoc, collection, serverTimestamp }) => {
-          import("@/lib/firebase").then(({ db }) => {
-            addDoc(collection(db, "contacts"), {
-              name: "Chatbot User",
-              email: extractedEmail,
-              message: extractedMessage,
-              timestamp: serverTimestamp(),
-            }).catch(console.error);
-          });
-        });
+        if (!web3formsSent && !firebaseSaved) {
+          aiText = `${aiText ? `${aiText} ` : ""}I could not send your message right now. Please try again or use the contact form.`.trim();
+        } else {
+          aiText = "I have successfully sent your mail to Ankit.";
+        }
+      }
+
+      if (!aiText) {
+        aiText = "I can help with Ankit's portfolio, projects, skills, or experience.";
       }
 
       const aiMessage: Message = {

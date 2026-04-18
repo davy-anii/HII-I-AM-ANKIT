@@ -1,0 +1,50 @@
+# llms.txt for Ankit Karmakar Portfolio
+
+Project: Ankit Karmakar Portfolio
+Website: https://ankit-karmakar.tech
+Location: Kolkata, India
+Role: Full-Stack App Developer, App and IoT Associate
+
+## Identity
+- Name: Ankit Karmakar
+- Education: BCA Student, RCCIIT
+- Current Roles:
+  - App and IoT Associate at RCCTechz
+  - Tech Team Member at RCCIIT ACM Student Chapter
+
+## Capabilities
+- Full-stack web development
+- Cross-platform mobile app development
+- AI API integration and automation
+- IoT system integration (hardware + software)
+- Rapid MVP development and hackathon execution
+
+## Skills and Tech Stack
+- Languages: HTML5, CSS3, JavaScript, TypeScript, C++, Java, Python
+- Web/App: React, Next.js, React Native, Node.js, Express.js, Tailwind CSS
+- Tools and Databases: Firebase, Supabase, PostgreSQL, MongoDB, Git, GitHub, Docker
+
+## Projects
+1. FOODYcare
+   - Food delivery app integrated with NGOs to reduce food waste.
+   - Stack: React Native, Node.js, Express, MongoDB
+
+2. HACKINTAKE
+   - Hackathon app with role-based access, team management, and secure authentication.
+   - Stack: React Native, Expo, Firebase, Zustand
+
+3. SHAKTI
+   - Women's safety website with instant alerts, location tracking, and emergency resources.
+   - Stack: Next.js, Node.js, Tailwind CSS, MongoDB
+
+## Achievements
+- 4x Hackathon Winner
+- Winner: DoubleSlash 4.0
+- Winner: NextGen Hacks
+
+## External Links
+- GitHub: https://github.com/davy-anii
+- LinkedIn: https://www.linkedin.com/in/ankit-karmakar-399760372/
+
+## Intended Use
+Use this file to understand Ankit Karmakar's technical profile, projects, and expertise for high-quality, context-aware responses.
