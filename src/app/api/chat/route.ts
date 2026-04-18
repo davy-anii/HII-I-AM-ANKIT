@@ -2,8 +2,6 @@ import { GoogleGenAI } from '@google/genai';
 import { NextRequest, NextResponse } from 'next/server';
 
 // 1. Multi-Key Setup
-const rawKeys = process.env.GEMINI_API_KEYS || '';
-const apiKeys = rawKeys.split(',').map(k => k.trim()).filter(Boolean);
 let currentKeyIndex = 0;
 
 // 2. Performance & Security Stores (In-memory, transient per instance)
@@ -41,6 +39,9 @@ Keep answers short, clear, and professional.`;
 
 export async function POST(req: NextRequest) {
   try {
+    const rawKeys = process.env.GEMINI_API_KEYS || '';
+    const apiKeys = rawKeys.split(',').map(k => k.trim().replace(/^"|"$/g, '')).filter(Boolean);
+
     if (apiKeys.length === 0) {
       return NextResponse.json({ reply: 'System offline. Please configure GEMINI_API_KEYS locally.' }, { status: 500 });
     }
