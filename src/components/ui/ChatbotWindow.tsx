@@ -10,68 +10,6 @@ interface Message {
   content: string;
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
-  return new Promise((resolve) => {
-    const timer = setTimeout(() => resolve(null), ms);
-    promise
-      .then((value) => {
-        clearTimeout(timer);
-        resolve(value);
-      })
-      .catch(() => {
-        clearTimeout(timer);
-        resolve(null);
-      });
-  });
-}
-
-async function submitChatLead(email: string, message: string) {
-  let web3formsSent = false;
-  let firebaseSaved = false;
-
-  const web3Task = withTimeout(
-    (async () => {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
-          name: "Chatbot User",
-          email,
-          message,
-        })
-      });
-
-      const result = await response.json().catch(() => ({}));
-      return Boolean(response.ok && result?.success);
-    })(),
-    7000
-  );
-
-  const firebaseTask = withTimeout(
-    (async () => {
-      const { addDoc, collection, serverTimestamp } = await import("firebase/firestore");
-      const { db } = await import("@/lib/firebase");
-
-      await addDoc(collection(db, "contacts"), {
-        name: "Chatbot User",
-        email,
-        message,
-        timestamp: serverTimestamp(),
-      });
-
-      return true;
-    })(),
-    7000
-  );
-
-  const [web3Result, firebaseResult] = await Promise.all([web3Task, firebaseTask]);
-  web3formsSent = Boolean(web3Result);
-  firebaseSaved = Boolean(firebaseResult);
-
-  return { web3formsSent, firebaseSaved };
-}
-
 export default function ChatbotWindow() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -120,23 +58,8 @@ export default function ChatbotWindow() {
 
       let aiText = String(data.reply || data.error || "Communication failure.").trim();
 
-      // Intercept LLM Email Commands directly on the client to bypass IP blocks
-      const emailMatch = aiText.match(/\[SEND_EMAIL:\s*([^|]+)\|\s*([^\]]+)\]/i);
-      if (emailMatch) {
-        const extractedEmail = emailMatch[1].trim().replace(/[<>]/g, '');
-        const extractedMessage = emailMatch[2].trim();
-
-        // Strip from the UI
-        aiText = aiText.replace(/\[SEND_EMAIL:.*?\]/i, "").trim();
-
-        const { web3formsSent, firebaseSaved } = await submitChatLead(extractedEmail, extractedMessage);
-
-        if (!web3formsSent && !firebaseSaved) {
-          aiText = `${aiText ? `${aiText} ` : ""}I could not send your message right now. Please try again or use the contact form.`.trim();
-        } else {
-          aiText = "I have successfully sent your mail to Ankit.";
-        }
-      }
+      // Safety: if a tag appears for any reason, hide it from chat UI.
+      aiText = aiText.replace(/\[SEND_EMAIL:.*?\]/i, "").trim();
 
       if (!aiText) {
         aiText = "I can help with Ankit's portfolio, projects, skills, or experience.";

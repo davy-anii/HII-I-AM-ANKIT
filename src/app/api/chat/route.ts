@@ -163,6 +163,62 @@ If the user provides both an email address and a message to send to Ankit, appen
 Do not use angle brackets.
 `;
 
+function parseSendEmailTag(text: string): { email: string; message: string } | null {
+  const match = text.match(/\[SEND_EMAIL:\s*([^|\]]+)\|\s*([^\]]+)\]/i);
+  if (!match) return null;
+
+  const email = match[1]?.trim().replace(/[<>\[\]]/g, '');
+  const message = match[2]?.trim().replace(/[\[\]]/g, '');
+
+  if (!email || !message) return null;
+  return { email, message };
+}
+
+async function sendLeadToWeb3Forms(email: string, message: string): Promise<boolean> {
+  const accessKey = process.env.WEB3FORMS_ACCESS_KEY || process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+  if (!accessKey) {
+    console.error('[Chatbot] Missing WEB3FORMS_ACCESS_KEY/NEXT_PUBLIC_WEB3FORMS_KEY.');
+    return false;
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
+
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        access_key: accessKey,
+        name: 'Chatbot User',
+        email,
+        message,
+        subject: 'New chat lead from portfolio assistant',
+        from_name: 'Kairo Assistant',
+      }),
+    });
+
+    clearTimeout(timeout);
+
+    const result = await response.json().catch(() => ({}));
+    return Boolean(response.ok && result?.success);
+  } catch (error: any) {
+    console.error('[Chatbot] Web3Forms send failed:', error?.message || error);
+    return false;
+  }
+}
+
+function buildSendReply(success: boolean): string {
+  if (success) {
+    return 'I have successfully sent your mail to Ankit.';
+  }
+  return 'I could not send your message right now. Please try again or use the contact form.';
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -182,8 +238,9 @@ export async function POST(req: NextRequest) {
     // Deterministic email-command extraction so contact sending does not rely only on LLM behavior.
     const emailCommand = extractEmailCommand(latestUserMessage);
     if (emailCommand) {
+      const sent = await sendLeadToWeb3Forms(emailCommand.email, emailCommand.message);
       return NextResponse.json({
-        reply: `I am sending your message to Ankit now. [SEND_EMAIL: ${emailCommand.email} | ${emailCommand.message}]`
+        reply: buildSendReply(sent),
       }, { status: 200 });
     }
 
@@ -249,6 +306,12 @@ export async function POST(req: NextRequest) {
       }, { userSeed: ip });
 
       aiText = response.text?.trim() || 'I can help with Ankit\'s portfolio, projects, skills, or experience.';
+
+        const taggedLead = parseSendEmailTag(aiText);
+        if (taggedLead) {
+          const sent = await sendLeadToWeb3Forms(taggedLead.email, taggedLead.message);
+          aiText = buildSendReply(sent);
+        }
     } catch (error: any) {
       if (error instanceof GeminiKeysExhaustedError) {
         console.error('[Chatbot] All API keys exhausted after rotation attempts.');
